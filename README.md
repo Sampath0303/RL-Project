@@ -15,9 +15,10 @@ An advanced Reinforcement Learning framework for dynamic cloud resource autoscal
 4. [Empirical Analysis: Synthetic vs Real Kaggle Dataset](#empirical-analysis-synthetic-vs-real-kaggle-dataset)
 5. [Experimental Results & Analysis](#experimental-results--analysis)
 6. [Visualizations](#visualizations)
-7. [How to Run & Reproduce](#how-to-run--reproduce)
-8. [Limitations & Practical Realities](#limitations--practical-realities)
-9. [Attribution & Credits](#attribution--credits)
+7. [Research Documentation](#research-documentation)
+8. [How to Run & Reproduce](#how-to-run--reproduce)
+9. [Limitations](#limitations)
+10. [Attribution & License](#attribution--license)
 
 ---
 
@@ -94,7 +95,7 @@ A central scientific contribution of this study is an honest, empirical evaluati
 
 ### 1. Real Kaggle Dataset (`vmCloud_data.csv`) Findings
 We analyzed the full 338 MB Kaggle dataset ($2,000,000$ rows):
-- **Missing Value Profile:** 687,148 rows ($34.36\%$) contained missing values across key telemetry features (~10% per column) and were dropped during preprocessing, leaving $1,312,852$ clean chronological rows.
+- **Missing Value Filtering:** 687,148 rows ($34.36\%$) contained missing values across key telemetry features (~10% per column) and were filtered out during preprocessing, leaving $1,312,852$ complete chronological records.
 - **Correlation Reality:** Cross-feature Pearson correlations are effectively zero:
   $$\rho(\text{CPU}, \text{Network}) = 0.0004 \quad | \quad \rho(\text{CPU}, \text{Exec Time}) = 0.0001 \quad | \quad \rho(\text{Network}, \text{Exec Time}) = 0.0002$$
 - **Autocorrelation Reality:** The lag-1 autocorrelation of CPU demand is $-0.00003$. The data behaves like independent, identically distributed (i.i.d.) uniform random noise rather than physical server traffic with diurnal cycles or cache effects.
@@ -102,11 +103,11 @@ We analyzed the full 338 MB Kaggle dataset ($2,000,000$ rows):
 
 ### 2. Structured Synthetic Workload
 To verify that the enhanced state space functions correctly when physical signal is present, we constructed a synthetic workload with verified characteristics:
-- **Periodic Demand:** Diurnal sinusoidal load + weekly drift + Gaussian noise + random burst spikes ($5\%$ probability, $+20$ demand).
-- **Leading Network Indicator:** Network traffic engineered to lead demand by 1 timestep:
-  $$\text{network}_t = 0.8 \times \text{demand}_{t+1} + \epsilon_t$$
-- **Coupled Execution Latency:** Task latency modeled via queueing theory:
-  $$\text{exec\_time}_t = \frac{\text{base\_time}}{1 - \min(u_t, 0.95)} + \eta_t$$
+- **Periodic Demand:** Diurnal sinusoidal load (period 144 steps, amplitude 20) + weekly drift (period 1008 steps, drift 8) + Gaussian noise ($\sigma = 3$) + random burst spikes ($5\%$ probability, $+20$ compute units).
+- **Leading Network Indicator:** Network traffic engineered to lead demand by 1 timestep (`lead = 1`):
+  $$\text{network}_t = 10.0 \times \text{demand}_{t+1} + \epsilon_t, \quad \epsilon_t \sim \mathcal{N}(0, 25^2)$$
+- **Coupled Execution Latency:** Task latency modeled via queueing theory with base latency 15 ms:
+  $$\text{exec\_time}_t = \frac{15.0}{1 - \min(u_t, 0.95)} + \eta_t, \quad \eta_t \sim \mathcal{N}(0, 2^2)$$
 
 ---
 
@@ -145,11 +146,11 @@ All experiments were trained across 5 independent random seeds (`[0, 1, 2, 3, 4]
 | **Synthetic** | **Q-Learning** | 4,242.2 ± 384.4 | **6,446.1 ± 317.8** | **+2,203.9 (+51.9%)** | 3.456 | 0.0259 | 1.55 | **YES ($p < 0.05$)** |
 | **Synthetic** | **Dyna-Q (plan=10)** | 2,379.1 ± 252.0 | **4,230.1 ± 372.4** | **+1,851.0 (+77.8%)** | 5.611 | 0.0050 | 2.51 | **YES ($p < 0.01$)** |
 | **Synthetic** | **SARSA** | 4,282.2 ± 243.3 | 3,861.6 ± 414.7 | -420.6 (-9.8%) | -1.647 | 0.1749 | -0.74 | NO ($p \ge 0.05$) |
-| **Synthetic** | **DQN** | *Not Evaluated (Pending)* | **7,838.3 ± 124.7** | *N/A (Pending)* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **Synthetic** | **DQN** | *Not Evaluated (Postponed)* | **7,838.3 ± 124.7** | *N/A* | *N/A* | *N/A* | *N/A* | *POSTPONED* |
 | **Dataset** | **Q-Learning** | **-3,734.5 ± 116.5** | -4,451.2 ± 557.0 | -716.7 (-19.2%) | -2.090 | 0.1049 | -0.93 | NO ($p \ge 0.05$) |
 | **Dataset** | **SARSA** | **-3,561.8 ± 116.9** | -3,987.7 ± 141.4 | -425.9 (-12.0%) | -3.210 | 0.0326 | -1.44 | **YES (Degradation)** |
 | **Dataset** | **Dyna-Q (plan=10)** | **-5,617.8 ± 384.6** | -6,046.4 ± 392.3 | -428.6 (-7.6%) | -0.703 | 0.5209 | -0.31 | NO ($p \ge 0.05$) |
-| **Dataset** | **DQN** | *Not Evaluated (Pending)* | -13,733.4 ± 2516.0 | *N/A (Pending)* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **Dataset** | **DQN** | *Not Evaluated (Postponed)* | -13,733.4 ± 2516.0 | *N/A* | *N/A* | *N/A* | *N/A* | *POSTPONED* |
 
 ---
 
@@ -181,9 +182,9 @@ All experiments were trained across 5 independent random seeds (`[0, 1, 2, 3, 4]
 
 **Key Academic Conclusions:**
 1. **State-Space Expansion Requires Causal Signals:** Expanding the state space from 45 to 405 states increases Q-Learning return by **$+51.9\%$** ($p < 0.05$) on structured workloads where network traffic is an advance indicator. Conversely, on uncorrelated noise (Kaggle dataset), expanding the state space causes a **$19.2\%$ degradation** due to sample sparsity.
-2. **Double DQN Performance Divergence:** Continuous neural network function approximation excels on structured periodic workloads (achieving the highest overall reward of **$+7,838.33$**), but diverges catastrophically on white noise ($-13,733.43$).
-3. **Tabular Robustness & SARSA Safety:** Tabular Q-Learning and SARSA remain remarkably stable. SARSA achieves the lowest SLA violation counts across both environments ($5.7$ on synthetic, $100.9$ on dataset) due to its conservative on-policy updates.
-4. **Deterministic Dyna-Q Over-Planning:** At asymptotic horizons (1,000 episodes), deterministic Dyna-Q model planning repeatedly replays stochastic noise, degrading performance from $+6,446$ ($k=0$) down to $+2,344$ ($k=50$). Model-based RL in stochastic cloud environments strictly requires probabilistic transition models.
+2. **Double DQN Noise Sensitivity:** Continuous neural network function approximation excels on structured periodic workloads (achieving the highest overall evaluation reward of **$+7,838.33 \pm 124.70$**), but exhibits high variance and instability on the uncorrelated Kaggle dataset ($-13,733.43 \pm 2,515.96$), where non-stationary noise can destabilize experience replay and gradient updates.
+3. **Tabular Robustness & SARSA Safety:** Tabular Q-Learning and SARSA remain remarkably stable across environments. SARSA achieves the lowest SLA violation counts ($5.7$ on synthetic, $100.9$ on dataset) due to its risk-averse on-policy updates.
+4. **Dyna-Q Planning Steps Sensitivity:** Across long horizons (1,000 episodes), deterministic single-sample model updates with large planning budgets ($k=50$) showed lower returns (+2,344 vs +6,446 at $k=0$). A plausible explanation is model bias: repeatedly sampling a single deterministic transition in a stochastic environment may reinforce transient noise and misestimate value functions. In highly variable cloud environments, model-based planning likely benefits from probabilistic or distribution-aware models.
 
 ---
 
@@ -209,18 +210,9 @@ All experiments were trained across 5 independent random seeds (`[0, 1, 2, 3, 4]
 
 ---
 
-## Academic & Research Documentation
+## Research Documentation
 
-Detailed scientific documentation, methodology derivations, and presentation materials are organized in the [`docs/`](docs/) directory:
-
-- [**Academic Presentation Deck (20 Slides)**](docs/presentation_content.md): Complete slide-by-slide presentation with formulas, architecture diagrams, and speaker notes.
-- [**Research Methodology & Mathematical Derivations**](docs/research_methodology.md): Rigorous MDP definitions, reward function derivation, state encoding, and academic attributions.
-- [**Final Results Analysis & Research Questions**](docs/final_results_analysis.md): In-depth scientific analysis answering 7 core research questions (state-space boundary, Dyna-Q noise compounding, Double DQN empirical limits).
-- [**Final Experiment Summary**](docs/final_experiment_summary.md): Experimental design, metric definitions, paired $t$-test protocols, and benchmark structure.
-- [**Final Research Report Draft**](docs/final_research_report_draft.md): Publication-grade academic paper draft.
-- [**Statistical Analysis Report**](results/statistical_analysis_ep1000.md): Automated paired $t$-tests, $p$-values, $95\%$ CIs, and Cohen's $d_z$ effect sizes across all 34 configurations.
-- [**Master Summary Table**](results/summary_table.md): Tabular overview of all evaluation rewards, SLA violations, and costs.
-- [**Provenance & Attribution Notice**](NOTICE.md): Full attribution to reference repository authors and itemized novel contributions.
+Detailed research materials, including the 20-slide presentation deck, mathematical derivations, analysis of core research questions, and the complete academic paper draft, are organized in the [`docs/`](docs/) directory. Full statistical reports ($t$-tests, $p$-values, effect sizes) and master benchmark tables are provided in [`results/`](results/).
 
 ---
 
@@ -264,20 +256,16 @@ py -3.12 src/statistical_analysis.py
 
 ---
 
-## Limitations & Practical Realities
+## Limitations
 
-While the empirical findings validate Dyna-Q and multi-dimensional state design, production cloud autoscaling involves real-world constraints:
-1. **Zero Boot / Provisioning Delay:** The simulated environment provisions or terminates servers instantaneously. In cloud providers (AWS EC2, GCP Compute Engine, Kubernetes), VM spin-up takes between 30 and 180 seconds, necessitating predictive horizons longer than single-step lookahead.
-2. **Synthetic Execution Time:** Latency is approximated using an $M/M/1$-style queueing formula rather than distributed tracing (e.g. OpenTelemetry, Jaeger) of request latencies and service-mesh retries.
-3. **Dataset Temporal Artifact:** The Kaggle dataset lacks temporal continuity (lag-1 autocorrelation $\approx 0$). Industrial deployments require real time-series traces (e.g. Alibaba Cluster Data, Azure VM Workload Traces) that capture true diurnal cycles, cron jobs, and failover spikes.
+1. **Instantaneous Server Provisioning:** The simulation models immediate server allocation and termination, whereas commercial cloud platforms (AWS, GCP, Kubernetes) experience VM boot latency (30–180 seconds).
+2. **Simulated Execution Latency:** Task execution latency is approximated via an $M/M/1$-style queueing formulation rather than physical distributed tracing.
+3. **Limited Dataset Temporal Structure:** The Kaggle cloud performance dataset exhibits low autocorrelation ($\approx 0$), behaving like unstructured noise rather than continuous diurnal production traffic.
 
 ---
 
-## Attribution & Credits
+## Attribution & License
 
-This project builds upon and extends the cloud autoscaling reinforcement learning research developed by the original UVA research team:
-- **Original Project:** *Cloud Autoscaling using Reinforcement Learning*
-- **Authors:** Harish Balasubramanyam, Jack Healy, Luke McGregor (University of Virginia)
-- **Original Architecture:** Reactive Gymnasium environment, discrete tabular Q-Learning / SARSA, and DQN implementations.
+This project builds upon and extends concepts from the open-source project [Cloud-Autoscaling-using-RL](https://github.com/rah-ds/Cloud-Autoscaling-using-RL) by Harish Balasubramanyam, Jack Healy, and Luke McGregor (University of Virginia, 2025). The discrete 3-action MDP formulation and baseline threshold heuristics were adapted from the original repository, while the 5D enhanced state space (405 states), model-based Dyna-Q planning, synthetic leading-indicator generation, and statistical evaluation framework were independently developed.
 
-This enhanced repository introduces the 5D enhanced state space ($405$ states), Dyna-Q model-based planning, leading-indicator synthetic generation, rigorous Kaggle data hygiene and caching, automated ablation pipelines, and full benchmark suites.
+Complete itemized provenance and attribution details are preserved in [`NOTICE.md`](NOTICE.md). The project is distributed under the [MIT License](LICENSE).
