@@ -73,10 +73,19 @@ Our findings yield definitive, mathematically verified, and academically honest 
 
 ### RQ5: How does Deep Reinforcement Learning (Double DQN) compare to Tabular RL?
 **Answer: Deep RL is a specialized powerhouse on structured signals, but dangerously fragile and prone to catastrophic failure on noisy real-world data.**
-- **Synthetic Workload**:
+- **Controlled State-Space Impact on Double DQN (45 vs 405 States)**:
+  - **Synthetic Workload**:
+    - Base (45 states): $+5,261.81 \pm 180.74$ | SLA Violations = $54.6 \pm 0.6$ | Cost = $\$1,823.94$
+    - Enhanced (405 states): **$+7,838.33 \pm 124.70$** | SLA Violations = **$16.0 \pm 3.6$** | Cost = $\$1,883.14$
+    - *Impact*: Enhanced state space yields a **$+2,576.5$ point gain (+49.0%)** ($t = 40.78, p < 0.0001$, Cohen's $d_z = 18.24$, highly statistically significant). Proactive signals enable a massive **70.7% reduction in SLA violations** ($54.6 \to 16.0$).
+  - **Kaggle Dataset**:
+    - Base (45 states): $-10,348.90 \pm 5663.62$ | SLA Violations = $209.2 \pm 95.8$ | Cost = $\$2,197.34$
+    - Enhanced (405 states): $-13,733.43 \pm 2515.96$ | SLA Violations = $261.7 \pm 38.9$ | Cost = $\$2,051.81$
+    - *Impact*: Expanding state space on uncorrelated noise further degrades reward by $-3,384.5$ points ($-32.7\%$), though not statistically significant ($p = 0.3921$) due to seed divergence.
+- **Synthetic Workload (Overall Main Benchmark)**:
   - Double DQN achieved the **highest reward of any algorithm**: **$+7,838.33 \pm 124.70$**, outperforming Q-Learning ($+6,446.10$), Threshold ($+6,607.83$), and Dyna-Q ($+4,230.09$).
   - *Explanation*: The continuous Multi-Layer Perceptron (128x128 ReLU) smoothly interpolated across the periodic sine waves, generalizing across continuous demand states without discretization error.
-- **Real Kaggle Dataset**:
+- **Real Kaggle Dataset (Overall Main Benchmark)**:
   - Double DQN suffered a **catastrophic collapse**: **$-13,733.43 \pm 2,515.96$**, with SLA violations ballooning to $261.7 \pm 38.9$ and underutilization penalties dominating.
   - *Explanation*: The Kaggle dataset is i.i.d. stochastic noise. The continuous neural network attempted to fit non-existent non-linear correlations in the noise, destabilizing the experience replay buffer and causing gradient oscillation. Tabular algorithms, by contrast, remained rock-solid because their value updates are localized to discrete bins.
 

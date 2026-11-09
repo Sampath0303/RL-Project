@@ -16,9 +16,9 @@ To eliminate common pitfalls in reinforcement learning benchmarks—such as sing
 
 ---
 
-## 2. The 34-Configuration Benchmark Matrix
+## 2. The Complete 36-Configuration Benchmark Matrix
 
-The evaluation spans 34 distinct configurations organized into three targeted experimental suites:
+The evaluation spans 36 distinct configurations organized into three targeted experimental suites:
 
 ```
 ====================================================================================================
@@ -51,18 +51,15 @@ Config 16: SARSA                   | Synthetic Workload | Base State (45 states)
 Config 17: Dyna-Q (plan = 10)      | Synthetic Workload | Base State (45 states)
 Config 18: Dyna-Q (plan = 10)      | Synthetic Workload | Base + Network (135 states)
 Config 19: Dyna-Q (plan = 10)      | Synthetic Workload | Base + Execution Time (135 states)
-Config 20: Q-Learning              | Kaggle Dataset     | Base State (45 states)
-Config 21: Q-Learning              | Kaggle Dataset     | Base + Network (135 states)
-Config 22: Q-Learning              | Kaggle Dataset     | Base + Execution Time (135 states)
-Config 23: SARSA                   | Kaggle Dataset     | Base State (45 states)
-Config 24: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base State (45 states)
-Config 25: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base + Network (135 states)
-Config 26: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base + Execution Time (135 states)
-
-*Note on DQN in Suite B*:
-The two 45-state DQN configurations (`dqn_synthetic_base_ep1000` and `dqn_dataset_base_ep1000`) 
-require ~19 hours of neural network replay buffer training. Per approved project protocol, they 
-remain strictly excluded and clearly marked as "Not Evaluated (Pending)".
+Config 20: Double DQN              | Synthetic Workload | Base State (45 states)
+Config 21: Q-Learning              | Kaggle Dataset     | Base State (45 states)
+Config 22: Q-Learning              | Kaggle Dataset     | Base + Network (135 states)
+Config 23: Q-Learning              | Kaggle Dataset     | Base + Execution Time (135 states)
+Config 24: SARSA                   | Kaggle Dataset     | Base State (45 states)
+Config 25: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base State (45 states)
+Config 26: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base + Network (135 states)
+Config 27: Dyna-Q (plan = 10)      | Kaggle Dataset     | Base + Execution Time (135 states)
+Config 28: Double DQN              | Kaggle Dataset     | Base State (45 states)
 
 ====================================================================================================
 SUITE C: DYNA-Q PLANNING SENSITIVITY STUDY
@@ -70,14 +67,14 @@ Goal: Evaluate the effect of background simulated planning steps k in {0, 5, 10,
 Episodes: 1,000 | Seeds: [0, 1, 2, 3, 4] | Eval Episodes: 100 | State Space: Full (405)
 (Note: k = 10 is re-used from Suite A to avoid redundant computation)
 ====================================================================================================
-Config 27: Dyna-Q (plan = 0)       | Synthetic Workload | Full State (405)
-Config 28: Dyna-Q (plan = 5)       | Synthetic Workload | Full State (405)
-Config 29: Dyna-Q (plan = 20)      | Synthetic Workload | Full State (405)
-Config 30: Dyna-Q (plan = 50)      | Synthetic Workload | Full State (405)
-Config 31: Dyna-Q (plan = 0)       | Kaggle Dataset     | Full State (405)
-Config 32: Dyna-Q (plan = 5)       | Kaggle Dataset     | Full State (405)
-Config 33: Dyna-Q (plan = 20)      | Kaggle Dataset     | Full State (405)
-Config 34: Dyna-Q (plan = 50)      | Kaggle Dataset     | Full State (405)
+Config 29: Dyna-Q (plan = 0)       | Synthetic Workload | Full State (405)
+Config 30: Dyna-Q (plan = 5)       | Synthetic Workload | Full State (405)
+Config 31: Dyna-Q (plan = 20)      | Synthetic Workload | Full State (405)
+Config 32: Dyna-Q (plan = 50)      | Synthetic Workload | Full State (405)
+Config 33: Dyna-Q (plan = 0)       | Kaggle Dataset     | Full State (405)
+Config 34: Dyna-Q (plan = 5)       | Kaggle Dataset     | Full State (405)
+Config 35: Dyna-Q (plan = 20)      | Kaggle Dataset     | Full State (405)
+Config 36: Dyna-Q (plan = 50)      | Kaggle Dataset     | Full State (405)
 ```
 
 ---

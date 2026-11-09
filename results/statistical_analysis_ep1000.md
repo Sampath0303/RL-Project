@@ -9,11 +9,11 @@ Comparing Original 3-Feature (45 states) vs Enhanced 5-Feature (405 states) acro
 | **Synthetic** | **QLEARNING** | 4,242.2 ± 1872.6 | 6,446.1 ± 441.2 | +2,203.9 | 3.456 | 0.0259 | 1.55 | **YES (Significant)** |
 | **Synthetic** | **SARSA** | 4,282.2 ± 438.4 | 3,861.6 ± 575.6 | -420.6 | -1.647 | 0.1749 | -0.74 | NO |
 | **Synthetic** | **DYNAQ** | 2,379.1 ± 1206.1 | 4,230.1 ± 517.0 | +1,851.0 | 5.611 | 0.0050 | 2.51 | **YES (Significant)** |
-| **Synthetic** | **DQN** | *PENDING (Postponed)* | *7,838.3 ± 173.1* | *N/A (Pending)* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **Synthetic** | **DQN** | 5,261.8 ± 250.9 | 7,838.3 ± 173.1 | +2,576.5 | 40.778 | 0.0000 | 18.24 | **YES (Significant)** |
 | **Dataset** | **QLEARNING** | -3,734.5 ± 305.3 | -4,451.2 ± 773.2 | -716.7 | -2.090 | 0.1049 | -0.93 | NO |
 | **Dataset** | **SARSA** | -3,561.8 ± 288.2 | -3,987.7 ± 196.3 | -425.9 | -3.210 | 0.0326 | -1.44 | **YES (Significant)** |
 | **Dataset** | **DYNAQ** | -5,617.8 ± 1893.0 | -6,046.4 ± 544.7 | -428.6 | -0.703 | 0.5209 | -0.31 | NO |
-| **Dataset** | **DQN** | *PENDING (Postponed)* | *-13,733.4 ± 3492.7* | *N/A (Pending)* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **Dataset** | **DQN** | -10,348.9 ± 7862.4 | -13,733.4 ± 3492.7 | -3,384.5 | -0.958 | 0.3921 | -0.43 | NO |
 
 
 ## 2. Contribution 2: Dyna-Q (Model Planning) vs Baselines (Enhanced 405-State Space)

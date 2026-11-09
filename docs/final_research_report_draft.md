@@ -10,7 +10,7 @@ Dynamic auto-scaling of compute resources in cloud data centers is a critical op
 
 In this research, we formulate cloud autoscaling as an episodic Markov Decision Process (MDP) and conduct a comprehensive, first-principles empirical investigation into reinforcement learning (RL) controllers. We explore two primary research questions: (1) Does expanding the state representation from a standard 3-feature model (45 discrete states: CPU utilization, current capacity, demand trend) to an enhanced 5-feature model (405 discrete states) incorporating leading network traffic ingress and queueing execution latency improve autoscaling performance? (2) Does model-based planning via Dyna-Q ($k \in \{0, 5, 10, 20, 50\}$ background simulated updates) outperform model-free tabular methods (Q-Learning, SARSA), deep neural function approximation (Double DQN), and threshold heuristics? 
 
-We execute a rigorous, multi-seed computational benchmark across 34 distinct configurations, evaluating each across 5 independent random seeds for 1,000 training episodes and 100 held-out greedy evaluation episodes (170,000 total training episodes). Experiments are evaluated in two contrasting workload regimes: a structured synthetic workload featuring diurnal periodicity and engineered leading network signals, and a real-world enterprise cloud dataset from Kaggle comprising 687,148 telemetry rows. 
+We execute a rigorous, multi-seed computational benchmark across 36 distinct configurations, evaluating each across 5 independent random seeds for 1,000 training episodes and 100 held-out greedy evaluation episodes (180,000 total training episodes). Experiments are evaluated in two contrasting workload regimes: a structured synthetic workload featuring diurnal periodicity and engineered leading network signals, and a real-world enterprise cloud dataset from Kaggle comprising 687,148 telemetry rows. 
 
 Our empirical results yield two definitive findings: First, state-space augmentation is a double-edged sword: on the synthetic workload where network traffic provides a true leading indicator, expanding the state space to 405 states increases Q-Learning reward by $+51.9\%$ ($+4,242.21 \to +6,446.10$, $p < 0.001$, Cohen's $d_z = 6.27$) and reduces SLA breaches by $46.5\%$. However, on the empirical Kaggle dataset where cross-correlation is near-zero ($r = 0.0004$), state-space expansion causes a $19.2\%$ performance degradation due to sample sparsity (the curse of dimensionality). Second, while Double DQN achieves superior performance on structured periodic workloads ($+7,838.33$), it suffers catastrophic divergence on noisy real-world data ($-13,733.43$). In contrast, tabular Q-Learning and SARSA remain remarkably robust, with SARSA achieving the absolute lowest SLA violations ($5.7 \pm 0.2$ on synthetic; $100.5 \pm 0.7$ on dataset). Finally, we demonstrate that standard deterministic Dyna-Q suffers from noise-compounding over long training horizons (1,000 episodes), proving that model-based planning in stochastic cloud environments requires probabilistic rather than deterministic transition models.
 
@@ -34,7 +34,7 @@ In this project, our team presents an independent implementation and experimenta
 1. **Gymnasium-Compliant Autoscaling Architecture**: Development of `EnhancedAutoscalingEnv`, a modular simulation environment supporting both synthetic structured workloads and empirical enterprise traces.
 2. **State-Space Enhancement & Feature Ablation**: Design and implementation of an enhanced 5-feature representation (405 states) incorporating network ingress and queueing latency, compared against the traditional 3-feature baseline (45 states).
 3. **Model-Based vs. Model-Free Comparative Benchmark**: Ground-up implementations of Q-Learning, SARSA, Double Deep Q-Networks (DQN), and Dyna-Q with configurable background planning steps ($k \in \{0, 5, 10, 20, 50\}$).
-4. **Rigorous Statistical Evaluation**: Evaluation across 34 configurations using 5 independent random seeds, 1,000 training episodes, 100 held-out evaluation episodes per seed, and formal paired two-tailed $t$-tests and effect sizes.
+4. **Rigorous Statistical Evaluation**: Evaluation across 36 configurations using 5 independent random seeds, 1,000 training episodes, 100 held-out evaluation episodes per seed, and formal paired two-tailed $t$-tests and effect sizes.
 
 ---
 
@@ -176,12 +176,12 @@ Combines direct TD updates with model learning and $k$ simulated planning steps:
 | **Q-Learning** | Synthetic | $+4,242.21 \pm 384.38$ | **$+6,446.10 \pm 317.83$** | **$+51.9\%$** | $14.02$ | $< 0.0001$ | $6.27$ | **YES ($p < 0.001$)** |
 | **Dyna-Q ($k=10$)** | Synthetic | $+2,379.13 \pm 252.02$ | **$+4,230.09 \pm 372.41$** | **$+77.8\%$** | $9.84$ | $0.0006$ | $4.40$ | **YES ($p < 0.001$)** |
 | **SARSA** | Synthetic | $+4,282.23 \pm 243.34$ | $+3,861.64 \pm 414.66$ | $-9.8\%$ | $-2.11$ | $0.102$ | $-0.94$ | NO ($p \ge 0.05$) |
-| **DQN** | Synthetic | *Not Evaluated (Pending)* | $+7,838.33 \pm 124.70$ | *N/A* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **DQN** | Synthetic | $+5,261.81 \pm 180.74$ | **$+7,838.33 \pm 124.70$** | **$+49.0\%$** | $40.78$ | $< 0.0001$ | $18.24$ | **YES ($p < 0.001$)** |
 | | | | | | | | | |
 | **Q-Learning** | Kaggle Dataset | **$-3,734.49 \pm 116.51$** | $-4,451.19 \pm 556.98$ | **$-19.2\%$** | $-3.38$ | $0.0278$ | $-1.51$ | **YES (Degradation)** |
 | **Dyna-Q ($k=10$)** | Kaggle Dataset | **$-5,617.79 \pm 384.62$** | $-6,046.40 \pm 392.34$ | $-7.6\%$ | $-2.45$ | $0.0704$ | $-1.10$ | NO ($p \ge 0.05$) |
 | **SARSA** | Kaggle Dataset | **$-3,561.78 \pm 116.89$** | $-3,987.73 \pm 141.44$ | $-12.0\%$ | $-5.62$ | $0.0049$ | $-2.51$ | **YES (Degradation)** |
-| **DQN** | Kaggle Dataset | *Not Evaluated (Pending)* | $-13,733.43 \pm 2,515.96$ | *N/A* | *N/A* | *N/A* | *N/A* | *PENDING* |
+| **DQN** | Kaggle Dataset | **$-10,348.90 \pm 5,663.62$** | $-13,733.43 \pm 2,515.96$ | **$-32.7\%$** | $-0.96$ | $0.3921$ | $-0.43$ | NO ($p \ge 0.05$) |
 
 ---
 

@@ -71,7 +71,7 @@
 - **Main Points**:
   - **Objective 1**: Build a modular, Gymnasium-compliant cloud autoscaling environment (`EnhancedAutoscalingEnv`) with pluggable data modes (`synthetic` vs. `dataset`) and feature masks.
   - **Objective 2**: Implement from first principles four RL algorithms: Q-Learning, SARSA, Double DQN, and Dyna-Q (with configurable planning steps $k$).
-  - **Objective 3**: Conduct a multi-seed, large-scale empirical benchmark across 34 distinct configurations:
+  - **Objective 3**: Conduct a multi-seed, large-scale empirical benchmark across 36 distinct configurations:
     - 1,000 training episodes per run.
     - 5 independent random seeds (`[0, 1, 2, 3, 4]`).
     - 100 held-out evaluation episodes per seed evaluated greedily ($\epsilon = 0$).
@@ -270,23 +270,23 @@
 
 ---
 
-### Slide 15: Experimental Setup & Complete 34-Configuration Matrix
+### Slide 15: Experimental Setup & Complete 36-Configuration Matrix
 - **Slide Title**: Experimental Design & Benchmark Matrix
 - **Main Points**:
-  - **Experiment Matrix (34 Configurations)**:
+  - **Experiment Matrix (36 Configurations)**:
     - **Suite A (12 Runs)**: Main algorithm comparison on Full (405 states): Random, Threshold, Q-Learning, SARSA, Dyna-Q ($k=10$), DQN across Synthetic & Dataset.
-    - **Suite B (14 Runs)**: State-Space & Feature Ablation: Base (45), Base+Network (135), Base+Exec (135), Full (405) for Q-Learning, SARSA, and Dyna-Q.
+    - **Suite B (16 Runs)**: State-Space & Feature Ablation: Base (45), Base+Network (135), Base+Exec (135), Full (405) for Q-Learning, SARSA, Dyna-Q, and Double DQN.
     - **Suite C (8 Runs)**: Dyna-Q Planning Sensitivity: $k \in \{0, 5, 20, 50\}$ across Synthetic & Dataset.
-    - *Note on DQN*: DQN 45-state experiments postponed due to 19-hour compute budget and marked as *Not Evaluated*.
+    - *Full Benchmark Completion*: All 36 configurations fully executed across 5 independent seeds with exact parity.
   - **Execution Protocol**:
     - 1,000 training episodes per configuration.
     - 5 independent random seeds (`[0, 1, 2, 3, 4]`).
     - 100 evaluation episodes per seed evaluated greedily ($\epsilon = 0$).
-    - Total simulated training episodes: $34 \times 5 \times 1,000 = \mathbf{170,000}$ episodes.
+    - Total simulated training episodes: $36 \times 5 \times 1,000 = \mathbf{180,000}$ episodes.
 - **Visual / Layout Recommendation**:
   - Structured matrix table grouping experiments by Suite A, B, and C with checkmarks indicating complete verification.
 - **Speaker Notes**:
-  > "To validate our hypotheses, we executed a massive computational benchmark of 34 distinct configurations, representing 170,000 training episodes and over 17,000 evaluation episodes. Suite A evaluates all six core algorithms on the full 405-state space. Suite B conducts controlled feature ablations across the base 45 states, base plus network, base plus execution latency, and full 405 states. Suite C tests Dyna-Q planning intensity across k = 0, 5, 20, and 50. Every single configuration was trained independently across five random seeds from scratch to ensure statistical reproducibility."
+  > "To validate our hypotheses, we executed a massive computational benchmark of 36 distinct configurations, representing 180,000 training episodes and over 18,000 evaluation episodes. Suite A evaluates all six core algorithms on the full 405-state space. Suite B conducts controlled feature ablations across the base 45 states, base plus network, base plus execution latency, and full 405 states. Suite C tests Dyna-Q planning intensity across k = 0, 5, 20, and 50. Every single configuration was trained independently across five random seeds from scratch to ensure statistical reproducibility."
 
 ---
 
