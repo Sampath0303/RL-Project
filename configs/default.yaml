@@ -1,0 +1,61 @@
+# Default Configuration for Enhanced Autoscaling
+
+# Workload & Data Settings
+data_mode: "dataset" # "dataset" or "synthetic"
+dataset_path: "data/raw/vmCloud_data.csv"
+feature_set: "full"  # "base", "base+network", "base+exec", "full"
+
+# Simulation & Training Parameters
+episodes: 1000
+episode_length: 1000
+seeds: [0, 1, 2, 3, 4]
+
+# Environment Infrastructure Configuration
+max_capacity: 5
+start_capacity: 3
+capacity_unit: 20  # capacity per server unit in CPU utilization %
+
+# Reward Weights (matching env.py rules)
+reward:
+  sla_violation_penalty: 50.0      # Base penalty for utilization >= 0.90 (-50 * (1 + (util - 0.90)))
+  underutilization_penalty: 5.0   # Scale for utilization < 0.20 (-5.0 * (0.20 - util))
+  scaling_cost: 0.5               # Provisioning cost per server (-0.5 * capacity)
+  normal_operating_bonus: 10.0    # Awarded when 0.40 <= util <= 0.80 (+5 bonus if 0.60 <= util <= 0.70)
+  churn_penalty: 2.0              # Penalty for changing capacity (action != 1)
+  synthetic_latency_threshold: 150.0 # Latency SLA threshold in ms
+
+# Discretization Thresholds (Bin edges for 3 levels each: low, medium, high)
+network_thresholds: [333.33, 666.67]
+execution_time_thresholds: [33.33, 66.67]
+trend_thresholds: [-2.0, 2.0]
+utilization_thresholds: [0.40, 0.80]
+
+# Hyperparameters for RL Agents
+hyperparameters:
+  tabular:
+    alpha: 0.1
+    gamma: 0.99
+    epsilon_start: 1.0
+    epsilon_min: 0.01
+    epsilon_decay: 0.995
+
+  dyna_q:
+    alpha: 0.1
+    gamma: 0.99
+    epsilon_start: 1.0
+    epsilon_min: 0.01
+    epsilon_decay: 0.995
+    planning_steps: 10
+
+  dqn:
+    learning_rate: 0.0005
+    gamma: 0.99
+    epsilon_start: 1.0
+    epsilon_min: 0.01
+    epsilon_decay: 0.995
+    batch_size: 64
+    buffer_size: 100000
+    hidden_dims: [128, 128]
+    tau: 0.001
+    target_update_freq: 10
+

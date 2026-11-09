@@ -1,0 +1,18 @@
+================ DATASET PROFILE REPORT ================
+File: enhanced_autoscaling\data\raw\vmCloud_data.csv
+Raw Rows:               2,000,000
+Cleaned Rows:           1,312,852
+Dropped Rows:           687,148 (34.36%)
+Date Range:             2023-01-01 00:00:09 to 2023-07-20 12:04:18
+Autocorrelation (lag 1): -0.00003
+
+Train Terciles (first 80%):
+  network_traffic:      [333.61, 666.71]
+  execution_time:       [33.31, 66.64]
+
+Correlation Matrix:
+                 cpu_usage  network_traffic  execution_time
+cpu_usage         1.000000        -0.000305       -0.000015
+network_traffic  -0.000305         1.000000        0.000693
+execution_time   -0.000015         0.000693        1.000000
+========================================================

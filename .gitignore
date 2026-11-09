@@ -1,0 +1,34 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Pytest / Coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Environments
+.venv/
+env/
+venv/
+ENV/
+
+# Large Datasets & Binary Caches
+data/raw/*.csv
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+*.npz
+
+# Keep all results JSON and Markdown reports
+results/*
+!results/.gitkeep
+!results/*_ep1000.json
+!results/*.md
+
+# IDE & OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
