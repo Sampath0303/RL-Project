@@ -266,6 +266,6 @@ py -3.12 src/statistical_analysis.py
 
 ## Attribution & License
 
-This project builds upon and extends concepts from the open-source project [Cloud-Autoscaling-using-RL](https://github.com/rah-ds/Cloud-Autoscaling-using-RL) by Harish Balasubramanyam, Jack Healy, and Luke McGregor (University of Virginia, 2025). The discrete 3-action MDP formulation and baseline threshold heuristics were adapted from the original repository, while the 5D enhanced state space (405 states), model-based Dyna-Q planning, synthetic leading-indicator generation, and statistical evaluation framework were independently developed.
+This project is distributed under the [MIT License](LICENSE).
 
-Complete itemized provenance and attribution details are preserved in [`NOTICE.md`](NOTICE.md). The project is distributed under the [MIT License](LICENSE).
+It adapts the discrete 3-action MDP structure and baseline threshold heuristics from [Cloud-Autoscaling-using-RL](https://github.com/rah-ds/Cloud-Autoscaling-using-RL) (Copyright © 2025 rah-ds). The 5D enhanced state space (405 states), model-based Dyna-Q planning, and statistical evaluation framework were independently developed. Complete component provenance is detailed in [`NOTICE.md`](NOTICE.md).
